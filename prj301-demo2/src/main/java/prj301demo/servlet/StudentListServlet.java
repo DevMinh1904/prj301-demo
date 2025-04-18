@@ -41,14 +41,55 @@ public class StudentListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet StudentListServlet</title>");            
+            out.println("<title>Servlet StudentListServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Student List </h1>");
-            
-           
-            
-        
+            String keyword = request.getParameter("keyword");
+            out.println("<form action='' method=GET>\n"
+                    + " <input name=keyword type=text value='" + keyword +"'>\n"
+                    + " <input type=submit value=Search>\n"
+                    + " </form>");
+            out.println("<table>");
+            out.println("<tr><td>Id</td>");
+            out.println("<td>First Name</td>");
+            out.println("<td>Last Name</td>");
+            out.println("<td>Age</td></tr>");
+            try {
+                Connection conn = DBUtils.getConnection();
+
+                String sql = "SELECT id, firstname, lastname, age FROM student";
+
+                if(keyword != null && !keyword.isEmpty()){
+                    sql += " WHERE lastname like ? OR firstname like ? ";
+                }
+                
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                
+                if(keyword != null && !keyword.isEmpty()){
+                    stmt.setString(1, "%" + keyword + "%");
+                    stmt.setString(2, "%" + keyword + "%");
+                }
+
+                ResultSet rs = stmt.executeQuery();
+                
+                if (rs != null) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        String firstname = rs.getString("firstname");
+                        String lastname = rs.getString("lastname");
+                        int age = rs.getInt("age");
+
+                        out.println("<tr><td>" + id + "</td>");
+                        out.println("<td>" + firstname + "</td>");
+                        out.println("<td>" + lastname + "</td>");
+                        out.println("<td>" + age + "</td></tr>");
+                    }
+                }
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(StudentListServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
             out.println("</table>");
             out.println("</body>");
             out.println("</html>");
