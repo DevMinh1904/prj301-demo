@@ -18,7 +18,7 @@ import prj301demo.Users.UserDTO;
  *
  * @author DUNGHUYNH
  */
-public class LoginServlet extends HttpServlet {
+public class LoginController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,35 +31,22 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-           
-            String username = request.getParameter("user");
-            String password = request.getParameter("password");
+
+        String username = request.getParameter("user");
+        String password = request.getParameter("password");
+
+        UserDAO dao = new UserDAO();
+        UserDTO user = dao.login(username, password);
+
+        if (user != null) {
+
             
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>PROJ301 Demo - Login result</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            
-            UserDAO dao = new UserDAO();
-            UserDTO user = dao.login(username, password);
-           
-            if (user != null){
-                request.setAttribute("usersession", user);
-                
-                RequestDispatcher rd = request.getRequestDispatcher("StudentList");
-                rd.forward(request, response);
-            }else{
-                response.sendRedirect("login.html");
-            }
-            
-                        
-            out.println("</body>");
-            out.println("</html>");
+            response.sendRedirect("./StudentList");
+        } else {
+            request.setAttribute("error", "Username or Password is error");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

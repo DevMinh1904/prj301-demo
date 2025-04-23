@@ -5,20 +5,19 @@
 package prj301demo.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import prj301demo.Users.UserDAO;
-import prj301demo.Users.UserDTO;
+import prj301demo.Student.StudentDAO;
+import prj301demo.Student.StudentDTO;
 
 /**
  *
  * @author DUNGHUYNH
  */
-public class LoginServlet extends HttpServlet {
+public class StudentListController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,40 +30,28 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-           
-            String username = request.getParameter("user");
-            String password = request.getParameter("password");
-            
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>PROJ301 Demo - Login result</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            
-            UserDAO dao = new UserDAO();
-            UserDTO user = dao.login(username, password);
-            
-            
-            if (user != null){
-            
-                request.setAttribute("usersession", user);
-                
-                RequestDispatcher rd = request.getRequestDispatcher("/StudentList");
-                rd.forward(request, response);
-            }else{
-                response.sendRedirect("login.html");                                
+
+        String action = request.getParameter("section");
+
+        if (action == null || action.equals("") || action.equals("list")) {
+
+            String keyword = request.getParameter("keyword");
+
+            if (keyword == null) {
+                keyword = "";
             }
-            
-                        
-            out.println("</body>");
-            out.println("</html>");
+            String sortCol = request.getParameter("colSort");
+
+            StudentDAO dao = new StudentDAO();
+            List<StudentDTO> list = dao.list(keyword, sortCol);
+
+            request.setAttribute("studentlist", list);
+            request.getRequestDispatcher("./studentlist.jsp").forward(request, response);
+
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

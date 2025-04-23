@@ -9,19 +9,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import prj301demo.Student.StudentDTO;
 import java.util.ArrayList;
 import java.util.List;
 import prj301demo.utils.DBUtils;
 
 /**
  *
- * @author DUNGHUYNH
+ * @author ducmi
  */
 public class StudentDAO {
 
     public List<StudentDTO> list(String keyword, String sortCol) {
 
-        List<StudentDTO> list = new ArrayList<StudentDTO>();
+        ArrayList<StudentDTO> list;
+        list = new ArrayList<StudentDTO>();
 
         try {
 
@@ -29,7 +31,7 @@ public class StudentDAO {
             String sql = " SELECT id, firstname, lastname, age FROM student ";
 
             if (keyword != null && !keyword.isEmpty()) {
-                sql += "WHERE firstname LIKE ? OR lastname LIKE ?";
+                sql += " WHERE firstname like ? OR lastname like ? ";
             }
 
             if (sortCol != null && !sortCol.isEmpty()) {
@@ -55,10 +57,10 @@ public class StudentDAO {
 
                     StudentDTO student = new StudentDTO();
                     student.setId(id);
-                    student.setFirstname(firstname);
-                    student.setLastname(lastname);
+                    student.setFirstName(firstname);
+                    student.setLastName(lastname);
                     student.setAge(age);
-
+                    
                     list.add(student);
                 }
             }
@@ -70,5 +72,4 @@ public class StudentDAO {
         }
         return list;
     }
-
 }

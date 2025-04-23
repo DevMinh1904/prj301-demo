@@ -46,8 +46,8 @@ public class StudentListServlet extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Student List </h1>");
             String keyword = request.getParameter("keyword");
-            out.println("<form action='' method=GET>\n"
-                    + " <input name=keyword type=text value='" + keyword +"'>\n"
+            out.println("<form action='' method=POST>\n"
+                    + " <input name=keyword type=text value=" + keyword +">\n"
                     + " <input type=submit value=Search>\n"
                     + " </form>");
             out.println("<table>");
