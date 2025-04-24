@@ -25,7 +25,8 @@
             if (list != null && !list.isEmpty()) {
         %>
         <table>
-            <tr><td>Id</td>
+            <tr>
+                <td>Id</td>
                 <td><a href=?colSort=firstname>Name</a></td>
                 <td>Age</td>
             </tr>
@@ -33,7 +34,8 @@
             <%
                 for (StudentDTO student : list) {
             %>
-            <tr><td><%=student.getId()%></td>
+            <tr>
+                <td><%=student.getId()%></td>
                 <td><%=student.getFirstname()%> <%=student.getLastname()%></td>
                 <td><%=student.getAge()%></td>
             </tr>
